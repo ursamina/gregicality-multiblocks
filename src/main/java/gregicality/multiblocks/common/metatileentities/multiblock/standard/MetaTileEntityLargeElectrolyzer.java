@@ -24,6 +24,9 @@ public class MetaTileEntityLargeElectrolyzer extends GCYMRecipeMapMultiblockCont
 
     public MetaTileEntityLargeElectrolyzer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.ELECTROLYZER_RECIPES);
+        this.setParallelScalar(2);
+        this.recipeMapWorkable.setSpeedBonus(0.556);
+        this.recipeMapWorkable.setEUDiscount(0.9);
     }
 
     @Override

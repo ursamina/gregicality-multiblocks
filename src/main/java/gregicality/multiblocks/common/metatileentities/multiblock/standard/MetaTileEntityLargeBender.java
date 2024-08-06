@@ -28,6 +28,8 @@ public class MetaTileEntityLargeBender extends GCYMRecipeMapMultiblockController
     public MetaTileEntityLargeBender(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, new RecipeMap[] { RecipeMaps.BENDER_RECIPES, RecipeMaps.COMPRESSOR_RECIPES,
                 RecipeMaps.FORMING_PRESS_RECIPES, RecipeMaps.FORGE_HAMMER_RECIPES });
+        this.setParallelScalar(4);
+        this.recipeMapWorkable.setSpeedBonus(0.2);
     }
 
     @Override

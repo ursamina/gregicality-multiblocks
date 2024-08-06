@@ -194,7 +194,7 @@ public class MetaTileEntityLargeDistillery extends GCYMRecipeMapMultiblockContro
                         .or(abilities(MultiblockAbility.INPUT_ENERGY).setMinGlobalLimited(1).setMaxGlobalLimited(2))
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1))
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS))
-                        .or(abilities(GCYMMultiblockAbility.PARALLEL_HATCH).setMaxGlobalLimited(1).setPreviewCount(1))
+                        .or(abilities(GCYMMultiblockAbility.UPGRADE_HATCH).setMaxGlobalLimited(1).setPreviewCount(1))
                         .or(maintenancePredicate))
                 .where('X', casingPredicate
                         .or(abilities(MultiblockAbility.EXPORT_FLUIDS)

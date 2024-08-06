@@ -36,7 +36,22 @@ gcym.machine.large_circuit_assembler.name=Large Circuit Assembler
 
 gcym.tooltip.parallel_enabled=Can parallelize with §bParallel Control Hatches
 gcym.tooltip.tiered_hatch_enabled=Requires §bVoltage Control Units§7 to run.
+gcym.tooltip.parallel_multiblock.show_tooltip=Hold CTRL to show Multiblock Bonuses
+
 gcym.multiblock.tiered_hatch.tooltip=Max Tiered EU/t: §a%s (%s§r)
+
+gcym.multiblock.energy_discount=EU Usage: %s
+gcym.multiblock.energy_discount_hover=Energy usage modifier, determined by Multiblock type
+gcym.multiblock.parallel=Max Parallels: %s
+gcym.multiblock.parallel_hover=Maximum Parallels, determined by Max EU/t
+gcym.multiblock.speed=Processing Speed: %s
+gcym.multiblock.speed_hover=Processing speed modifier, determined by Multiblock type
+
+
+
+gcym.tooltip.max_parallel=§5Max Parallel: §f%s §7per voltage tier
+gcym.tooltip.energy_discount=§aEnergy Usage: §f%s%%
+gcym.tooltip.speed_boost=§bProcessing Speed: §f%s%%
 
 
 
@@ -44,7 +59,7 @@ gcym.multiblock.tiered_hatch.tooltip=Max Tiered EU/t: §a%s (%s§r)
 gcym.multiblock.large_macerator.description=A multiblock Macerator for grinding.
 gcym.multiblock.alloy_blast_smelter.description=A Blast Furnace built for creating alloys in high volumes.
 gcym.multiblock.large_arc_furnace.description=A multiblock Arc Furnace for recycling.
-gcym.multiblock.large_assembler.description=A multiblock Assembling Machine for putting things together.
+gcym.multiblock.large_assembler.tooltip=A multiblock Assembling Machine for putting things together.
 gcym.multiblock.large_autoclave.description=A multiblock Autoclave for pressurizing things.
 gcym.multiblock.large_bender.description=A multiblock Bending Machine, Compressor, Forming Press and Forge Hammer for forming materials.
 gcym.multiblock.large_brewer.description=A multiblock Brewing Machine and Fermenter for producing brews.
@@ -73,13 +88,12 @@ gcym.multiblock.large_circuit_assembler.description=A multiblock Circuit Assembl
 
 
 # hatches
-
-gcym.machine.parallel_hatch.iv.name=Elite Parallel Control Hatch
-gcym.machine.parallel_hatch.luv.name=Master Parallel Control Hatch
-gcym.machine.parallel_hatch.zpm.name=Ultimate Parallel Control Hatch
-gcym.machine.parallel_hatch.uv.name=Super Parallel Control Hatch
-gcym.machine.parallel_hatch.tooltip=Allows up to §b%s§7 parallel recipes.
-gcym.machine.parallel_hatch.display=Adjust the maximum parallel of the multiblock
+gcym.machine.upgrade_hatch.iv.name=Elite Upgrade Hatch
+gcym.machine.upgrade_hatch.luv.name=Master Upgrade Hatch
+gcym.machine.upgrade_hatch.zpm.name=Ultimate Upgrade Hatch
+gcym.machine.upgrade_hatch.uv.name=Super Upgrade Hatch
+gcym.machine.upgrade_hatch_singular.tooltip=Holds up to §b%s§7 Upgrade Chip.
+gcym.machine.upgrade_hatch.tooltip=Holds up to §b%s§7 Upgrade Chips.
 
 gcym.machine.tiered_hatch.tooltip.1=Enables up to %s§7 Voltage.
 
@@ -150,3 +164,6 @@ gcym.fluid.molten=Molten %s
 
 # deprecation
 gcym.deprecation.tooltip=§cThis Machine is DEPRECATED! It will be REMOVED in the next update! Break the controller block to recover crafting materials!
+
+# items
+metaitem.upgradechip.foobar.name=Generic Upgrade Chip

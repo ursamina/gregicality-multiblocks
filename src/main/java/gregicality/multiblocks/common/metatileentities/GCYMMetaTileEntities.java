@@ -8,8 +8,8 @@ import gregtech.api.GregTechAPI;
 
 import gregicality.multiblocks.common.metatileentities.multiblock.generator.MetaTileEntitySteamEngine;
 import gregicality.multiblocks.common.metatileentities.multiblock.standard.*;
-import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityParallelHatch;
 import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
+import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityUpgradeHatch;
 
 public final class GCYMMetaTileEntities {
 
@@ -42,8 +42,8 @@ public final class GCYMMetaTileEntities {
     public static MetaTileEntitySteamEngine STEAM_ENGINE;
     public static MetaTileEntityLargeCircuitAssembler LARGE_CIRCUIT_ASSEMBLER;
 
-    public static MetaTileEntityParallelHatch[] PARALLEL_HATCH = new MetaTileEntityParallelHatch[4];
     public static MetaTileEntityTieredHatch[] TIERED_HATCH = new MetaTileEntityTieredHatch[GTValues.V.length];
+    public static MetaTileEntityUpgradeHatch[] UPGRADE_HATCH = new MetaTileEntityUpgradeHatch[4];
 
     private GCYMMetaTileEntities() {}
 
@@ -89,18 +89,19 @@ public final class GCYMMetaTileEntities {
         LARGE_CIRCUIT_ASSEMBLER = registerMetaTileEntity(2028,
                 new MetaTileEntityLargeCircuitAssembler(gcymId("large_circuit_assembler")));
 
-        // Hatches
-        for (int i = 0; i < PARALLEL_HATCH.length; i++) {
-            int tier = GTValues.IV + i;
-            PARALLEL_HATCH[i] = registerMetaTileEntity(2050 + i, new MetaTileEntityParallelHatch(
-                    gcymId(String.format("parallel_hatch.%s", GTValues.VN[tier])), tier));
-        }
         for (int i = 0; i < TIERED_HATCH.length; i++) {
             if (!GregTechAPI.isHighTier() && i > GTValues.UHV)
                 break;
 
             TIERED_HATCH[i] = registerMetaTileEntity(2054 + i,
                     new MetaTileEntityTieredHatch(gcymId(String.format("tiered_hatch.%s", GTValues.VN[i])), i));
+        }
+        for (int i = 0; i < UPGRADE_HATCH.length; i++) {
+
+            int tier = GTValues.IV + i;
+
+            UPGRADE_HATCH[i] = registerMetaTileEntity(2070 + i,
+                    new MetaTileEntityUpgradeHatch(gcymId(String.format("upgrade_hatch.%s", GTValues.VN[tier])), tier));
         }
     }
 }

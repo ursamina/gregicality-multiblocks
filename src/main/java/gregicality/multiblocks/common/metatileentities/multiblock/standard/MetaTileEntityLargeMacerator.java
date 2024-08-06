@@ -24,6 +24,8 @@ public class MetaTileEntityLargeMacerator extends GCYMRecipeMapMultiblockControl
 
     public MetaTileEntityLargeMacerator(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.MACERATOR_RECIPES);
+        this.setParallelScalar(8);
+        this.recipeMapWorkable.setSpeedBonus(0.625);
     }
 
     @Override

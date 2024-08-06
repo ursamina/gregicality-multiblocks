@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMap;
@@ -37,6 +36,7 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
 
     public MetaTileEntityLargeAssembler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, determineRecipeMaps());
+        this.setParallelScalar(2);
     }
 
     @Override
@@ -56,8 +56,7 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(40)
-                        .or(autoAbilities(false, true, true, true, true, true, true))
-                        .or(abilities(MultiblockAbility.INPUT_ENERGY).setExactLimit(1)))
+                        .or(autoAbilities(false, true, true, true, true, true, true)))
                 .where('C', states(getCasingState2()))
                 .where('T', tieredCasing().or(air()))
                 .where('A', air())

@@ -29,6 +29,7 @@ public class MetaTileEntityLargeCentrifuge extends GCYMRecipeMapMultiblockContro
     public MetaTileEntityLargeCentrifuge(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId,
                 new RecipeMap[] { RecipeMaps.CENTRIFUGE_RECIPES, RecipeMaps.THERMAL_CENTRIFUGE_RECIPES });
+        this.setParallelScalar(6);
     }
 
     @Override
@@ -43,7 +44,8 @@ public class MetaTileEntityLargeCentrifuge extends GCYMRecipeMapMultiblockContro
                 .aisle("XXSXX", "XACAX", "XCTCX", "XACAX", "XXXXX")
                 .aisle("#XXX#", "XXXXX", "XXXXX", "XXXXX", "#XXX#")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
+                .where('X',
+                        states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
                 .where('C', states(getCasingState2()))
                 .where('T', tieredCasing().or(air()))
                 .where('A', air())
