@@ -191,6 +191,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
     @Override
     protected void initializeAbilities() {
+        super.initializeAbilities();
         List<IEnergyContainer> inputEnergy = new ArrayList<>(getAbilities(MultiblockAbility.INPUT_ENERGY));
         inputEnergy.addAll(getAbilities(MultiblockAbility.INPUT_LASER));
         this.energyContainer = new EnergyContainerList(inputEnergy);
