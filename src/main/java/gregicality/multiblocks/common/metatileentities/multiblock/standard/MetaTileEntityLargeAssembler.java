@@ -4,6 +4,8 @@ import static gregtech.api.util.RelativeDirection.*;
 
 import java.util.List;
 
+import gregicality.multiblocks.api.capability.IUpgradeableMultiblock;
+import gregtech.api.recipes.recipeproperties.IRecipePropertyStorage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,7 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
     public MetaTileEntityLargeAssembler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, determineRecipeMaps());
         this.setParallelScalar(2);
+        this.recipeMapWorkable.setSpeedBonus(this.getSpecialUpgrade() ? 0.01 :  this.getUpgradeSpeedBonus());
     }
 
     @Override
@@ -56,7 +59,7 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(40)
-                        .or(autoAbilities(false, true, true, true, true, true, true)))
+                        .or(autoAbilities(false, true, true, true, true, true, true)).or(getHatchPredicates()))
                 .where('C', states(getCasingState2()))
                 .where('T', tieredCasing().or(air()))
                 .where('A', air())

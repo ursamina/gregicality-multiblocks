@@ -36,34 +36,31 @@ import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.GTUtility;
+import gregtech.api.util.LocalizationUtils;
 import gregtech.api.util.TextComponentUtil;
 import gregtech.api.util.TextFormattingUtil;
 
 import gregicality.multiblocks.api.capability.IUpgradeableMultiblock;
 import gregicality.multiblocks.api.capability.impl.GCYMMultiblockRecipeLogic;
 import gregicality.multiblocks.api.render.GCYMGuiTextures;
+import gregicality.multiblocks.api.upgrade.Upgrade;
 import gregicality.multiblocks.common.GCYMConfigHolder;
 
 public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblockController
                                                         implements IUpgradeableMultiblock {
 
-    // TODO NBT. Do the NBT these settings wont persist between logins.
-
     public int currentMemory;
+    private final Upgrade scalar = new Upgrade(0, 0, 5, 1, 1);
+    private final Upgrade processingSpeed = new Upgrade(0, 0, 50, 5, 2);
+    private final Upgrade euDiscount = new Upgrade(0, 0, 50, 5, 3);
+    private final Upgrade parallelMultiplier = new Upgrade(1, 1, 5, 1, 10);
+    private final Upgrade specialUpgrade = new Upgrade(0, 0, 1, 1, 20);
+    private final Upgrade laserCompatible = new Upgrade(0, 0, 1, 1, 30);
 
-    private int scalar;
-    private final int maxScalar;
-    private int processingSpeed;
-    private int euDiscount;
-    private int parallelMultiplier;
-    private boolean specialUpgrade;
-    private boolean laserCompatible;
     private int memoryMultiplier;
-
     protected int parallelScalar;
     protected int inherentEUtDiscount;
     protected int inherentSpeedBonus;
-
 
     public GCYMRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         this(metaTileEntityId, new RecipeMap<?>[] { recipeMap });
@@ -73,30 +70,18 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
         super(metaTileEntityId, recipeMaps);
 
         this.recipeMapWorkable = new GCYMMultiblockRecipeLogic(this);
-
-        this.scalar = 0;
-        this.maxScalar = 5;
-        this.processingSpeed = 100;
-        this.euDiscount = 100;
-        this.parallelMultiplier = 1;
-        this.specialUpgrade = false;
-        this.laserCompatible = false;
-
         this.memoryMultiplier = 1;
     }
-
 
     // todo parallel multipliers arent implemented yet
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        resetAllValues();
-    }
+        calculateMemoryUsage();
 
-    @Override
-    public void invalidateStructure() {
-        super.invalidateStructure();
-        resetAllValues();
+        if (laserCompatible.currentValue != 1 && !this.getAbilities(MultiblockAbility.INPUT_LASER).isEmpty()) {
+            this.invalidateStructure();
+        }
     }
 
     public int getMaxMemory() {
@@ -104,68 +89,79 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                 this.getAbilities(GCYMMultiblockAbility.UPGRADE_HATCH).get(0).getMaxMemory();
     }
 
-    public int getCurrentMemory() {
-        return currentMemory;
-    }
-
-    public double getMemoryUsage() {
-        return (double) getCurrentMemory() / getMaxMemory();
-    }
-
-    public int getCurrentScalar() {
-        return scalar;
-    }
-
-    public int getCurrentSpeed() {
-        return processingSpeed;
-    }
-
-    public int getCurrentDiscount() {
-        return euDiscount;
-    }
-
-    public int getCurrentMultiplier() {
-        return parallelMultiplier;
-    }
-
-    public boolean isSpecialUpgrade() {
-        return specialUpgrade;
-    }
-
-    public boolean isLaserCompatible() {
-        return laserCompatible;
+    public double getMemoryUsageProgressBar() {
+        if (currentMemory >= getMaxMemory()) {
+            return 1;
+        } else return (double) currentMemory / getMaxMemory();
     }
 
     public boolean hasMemoryCapacity() {
         return getMaxMemory() >= currentMemory;
     }
 
-    public void setSpecialUpgrade(boolean specialUpgradeToggled) {
-        if (!isSpecialUpgrade()) {
-            specialUpgrade = specialUpgradeToggled;
-            currentMemory = (currentMemory + 10 * getMemoryMultiplier()) * 2;
-            memoryMultiplier = memoryMultiplier * 2;
-        } else {
-            specialUpgrade = false;
-            memoryMultiplier = memoryMultiplier / 2;
-            currentMemory = (currentMemory / 2) - 10 * getMemoryMultiplier();
-        }
+    public int calculateMemoryUsage() {
+        int flatMemoryUsage = scalar.getMemoryConsumption() + processingSpeed.getMemoryConsumption() +
+                euDiscount.getMemoryConsumption() + parallelMultiplier.getMemoryConsumption() +
+                specialUpgrade.getMemoryConsumption() + laserCompatible.getMemoryConsumption();
+
+        return flatMemoryUsage * memoryMultiplier;
     }
 
-    public int getMemoryMultiplier() {
-        return memoryMultiplier;
+    public void toggleSpecialUpgrade(boolean specialUpgradeToggled) {
+        if (specialUpgradeToggled) {
+
+            switch (specialUpgrade.currentValue) {
+                case 0 -> {
+                    specialUpgrade.setCurrentValue(1);
+                    setMemoryMultiplier();
+                }
+                case 1 -> {
+                    specialUpgrade.setCurrentValue(0);
+                    setMemoryMultiplier();
+                }
+            }
+        } else {
+            specialUpgrade.setCurrentValue(0);
+            setMemoryMultiplier();
+        }
+        setMemoryUsage();
+    }
+
+    public boolean getSpecialUpgrade() {
+        return specialUpgrade.isEnabled();
+
+    }
+
+    public void setMemoryMultiplier() {
+        int memoryMultiplier = ((specialUpgrade.currentValue + 1)) * (3 * (laserCompatible.currentValue));
+        // ((0 + 1) *
+
+        if (memoryMultiplier == 0) this.memoryMultiplier = ((specialUpgrade.currentValue + 1));
+
+        else this.memoryMultiplier = memoryMultiplier;
     }
 
     public void setLaserCompatible(boolean laserUpgradeToggled) {
         if (laserUpgradeToggled) {
-            laserCompatible = true;
-            currentMemory = (currentMemory + 25 * getMemoryMultiplier()) * 3;
-            memoryMultiplier = memoryMultiplier * 3;
+
+            switch (laserCompatible.currentValue) {
+                case 0 -> {
+                    laserCompatible.setCurrentValue(1);
+                    setMemoryMultiplier();
+                }
+                case 1 -> {
+                    laserCompatible.setCurrentValue(0);
+                    setMemoryMultiplier();
+                    this.invalidateStructure();
+                }
+            }
         } else {
-            laserCompatible = false;
-            memoryMultiplier = memoryMultiplier / 3;
-            currentMemory = (currentMemory / 3) - 25 * getMemoryMultiplier();
+            laserCompatible.setCurrentValue(0);
+            setMemoryMultiplier();
+            this.invalidateStructure();
         }
+
+        setMemoryUsage();
     }
 
     @Override
@@ -212,7 +208,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                 .addCustom(tl -> {
                     if (isStructureFormed()) {
                         // Energy Discount
-                        if (getTotalEUtDiscount() != 1) {
+                        if (getTotalEUtDiscount() != 0) {
 
                             ITextComponent energyDiscount = TextComponentUtil.stringWithColor(
                                     TextFormatting.AQUA,
@@ -220,7 +216,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
                             ITextComponent base = TextComponentUtil.translationWithColor(
                                     TextFormatting.GRAY,
-                                    "Energy discount: %s%%",
+                                    "EU/t Discount: %s%%",
                                     energyDiscount);
 
                             ITextComponent hoverText = TextComponentUtil.translationWithColor(
@@ -238,7 +234,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                                     TextFormattingUtil.formatNumbers(100.0 * getUpgradeSpeedBonus()) + "%");
                             ITextComponent base = TextComponentUtil.translationWithColor(
                                     TextFormatting.GRAY,
-                                    "gcym.multiblock.speed",
+                                    "Recipe Duration: %s",
                                     speedBoost);
                             ITextComponent hoverText = TextComponentUtil.translationWithColor(
                                     TextFormatting.GRAY,
@@ -246,7 +242,6 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                             TextComponentUtil.setHover(base, hoverText);
                             tl.add(base);
                         }
-                        if (getTotalParallel() > 1) {
                             ITextComponent parallels = TextComponentUtil.stringWithColor(
                                     TextFormatting.DARK_PURPLE,
                                     TextFormattingUtil.formatNumbers(
@@ -259,19 +254,28 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                                     TextFormatting.GRAY,
                                     "gcym.multiblock.parallel_hover");
                             tl.add(TextComponentUtil.setHover(bodyText, hoverText));
-                        }
-                        if (isLaserCompatible()) {
-                            ITextComponent parallels = TextComponentUtil.stringWithColor(
-                                    TextFormatting.DARK_PURPLE,
-                                    Boolean.toString(isLaserCompatible()));
-                            ITextComponent bodyText = TextComponentUtil.translationWithColor(
+
+
+                        if (laserCompatible.currentValue == 1) {
+                            ITextComponent bodyText1 = TextComponentUtil.translationWithColor(
                                     TextFormatting.GRAY,
-                                    "Hi %s",
-                                    parallels);
-                            ITextComponent hoverText = TextComponentUtil.translationWithColor(
+                                    "Laser Hatches: Enabled");
+                            ITextComponent hoverText1 = TextComponentUtil.translationWithColor(
                                     TextFormatting.GRAY,
                                     "gcym.multiblock.parallel_hover");
-                            tl.add(TextComponentUtil.setHover(bodyText, hoverText));
+                            tl.add(TextComponentUtil.setHover(bodyText1, hoverText1));
+
+                        }
+
+                        if (specialUpgrade.currentValue == 1) {
+                            ITextComponent bodyText2 = TextComponentUtil.translationWithColor(
+                                    TextFormatting.GRAY,
+                                    "Special Upgrade: Enabled"
+                                    );
+                            ITextComponent hoverText2 = TextComponentUtil.translationWithColor(
+                                    TextFormatting.GRAY,
+                                    "gcym.multiblock.parallel_hover");
+                            tl.add(TextComponentUtil.setHover(bodyText2, hoverText2));
 
                         }
                     }
@@ -315,7 +319,6 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
         builder.widget(getFlexButton(173, 125, 18, 18));
 
         // Power Button
-        // todo in the future, refactor so that this class is instanceof IControllable.
         IControllable controllable = getCapability(GregtechTileCapabilities.CAPABILITY_CONTROLLABLE, null);
         if (controllable != null) {
             builder.widget(new ImageCycleButtonWidget(173, 183, 18, 18, GuiTextures.BUTTON_POWER,
@@ -325,23 +328,27 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
         // Widgets 'n' Buttons
         builder.widget(getUpgradeButtons(4, "scalar_parallel", GCYMGuiTextures.BUTTON_SCALAR_PARALLEL, "Scalar",
-                this::decrementScalar, this::incrementScalar));
+                s -> this.modifyValue(s, scalar, false), s -> this.modifyValue(s, scalar, true),
+                scalar));
 
         builder.widget(getUpgradeButtons(23, "processing_speed", GCYMGuiTextures.BUTTON_PROCESSING_SPEED,
-                "Processing Speed", this::decrementProcessingSpeed, this::incrementProcessingSpeed));
+                "Processing Speed", s -> this.modifyValue(s, processingSpeed, false),
+                s -> this.modifyValue(s, processingSpeed, true), processingSpeed));
 
         builder.widget(getUpgradeButtons(42, "eu_discount", GCYMGuiTextures.BUTTON_EU_DISCOUNT, "EU Discount",
-                this::decrementEuDiscount, this::incrementEuDiscount));
+                s -> this.modifyValue(s, euDiscount, false), s -> this.modifyValue(s, euDiscount, true), euDiscount));
 
         builder.widget(getUpgradeButtons(61, "multiplier_parallel", GCYMGuiTextures.BUTTON_MULTIPLIER_PARALLEL,
-                "Parallel Multiplier", this::decrementParallelMultiplier, this::incrementParallelMultiplier));
+                "Parallel Multiplier", s -> this.modifyValue(s, parallelMultiplier, false),
+                s -> this.modifyValue(s, parallelMultiplier, true), parallelMultiplier));
 
         builder.widget(new ImageCycleButtonWidget(156, 80, 18, 18, GCYMGuiTextures.BUTTON_SPECIAL_UPGRADE,
-                () -> specialUpgrade,
-                this::setSpecialUpgrade));
+                specialUpgrade::isEnabled,
+                this::toggleSpecialUpgrade));
         //
         builder.widget(
-                new ImageCycleButtonWidget(176, 80, 18, 18, GCYMGuiTextures.BUTTON_LASER_UPGRADE, () -> laserCompatible,
+                new ImageCycleButtonWidget(176, 80, 18, 18, GCYMGuiTextures.BUTTON_LASER_UPGRADE,
+                        laserCompatible::isEnabled,
                         this::setLaserCompatible));
 
         builder.widget(new ClickButtonWidget(156, 99, 38, 11, "", this::resetButton)
@@ -356,7 +363,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
         // Desperate attempt at a progress bar
         builder.widget(new ProgressWidget(
-                this::getMemoryUsage,
+                this::getMemoryUsageProgressBar,
                 4, 113, 189, 7,
                 this.getProgressBarTexture(), ProgressWidget.MoveType.HORIZONTAL)
                         .setHoverTextConsumer(this::addBarHoverText));
@@ -370,7 +377,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
     private void addBarHoverText(List<ITextComponent> textList) {
         ITextComponent memoryInfo = new TextComponentTranslation("%s / %s GB",
-                TextFormattingUtil.formatNumbers(getCurrentMemory()),
+                TextFormattingUtil.formatNumbers(currentMemory),
                 TextFormattingUtil.formatNumbers(getMaxMemory()));
         textList.add(TextComponentUtil.translationWithColor(
                 TextFormatting.GRAY,
@@ -380,7 +387,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
 
     protected @NotNull Widget getUpgradeButtons(int y, String upgradeType, TextureArea buttonTexture, String tooltip,
                                                 Consumer<Widget.ClickData> decrementValue,
-                                                Consumer<Widget.ClickData> incrementValue) {
+                                                Consumer<Widget.ClickData> incrementValue, Upgrade upgrade) {
         WidgetGroup group = new WidgetGroup(156, y, 38, 18);
 
         group.addWidget(new ClickButtonWidget(0, 0, 9, 18, "", decrementValue)
@@ -388,8 +395,10 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                 .setTooltipText("gcym.machine.upgrade_hatch.decrement_" + upgradeType));
 
         group.addWidget(new ImageWidget(10, 0, 18, 18)
+
                 .setImage(buttonTexture).setIgnoreColor(true)
-                .setTooltip(tooltip));
+                .setTooltip(LocalizationUtils.format("Using %s / %s upgrade points", upgrade.getAllocatedPoints(), upgrade.getMaxPoints()))
+                );
 
         group.addWidget(new ClickButtonWidget(29, 0, 9, 18, "", incrementValue)
                 .setButtonTexture(GuiTextures.BUTTON_THROTTLE_PLUS)
@@ -399,79 +408,40 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
     }
 
     private void resetButton(Widget.ClickData clickData) {
-        this.resetAllValues();
+        resetAllValues();
+        this.invalidateStructure();
     }
 
     private void resetAllValues() {
-        this.scalar = 0;
-        this.processingSpeed = 100;
-        this.euDiscount = 100;
-        this.parallelMultiplier = 1;
+        scalar.setCurrentValue(0);
+        processingSpeed.setCurrentValue(0);
+        euDiscount.setCurrentValue(0);
+        parallelMultiplier.setCurrentValue(1);
 
-        this.specialUpgrade = false;
-        this.laserCompatible = false;
+        laserCompatible.setCurrentValue(0);
+        specialUpgrade.setCurrentValue(0);
 
-        this.currentMemory = 0;
         this.memoryMultiplier = 1;
+
+        setMemoryUsage();
     }
 
-    private void decrementScalar(Widget.ClickData clickData) {
-        if (getCurrentMemory() >= getMemoryMultiplier() && scalar > 0) {
-            scalar = MathHelper.clamp(scalar - 1, 0, maxScalar);
-            currentMemory = currentMemory - getMemoryMultiplier();
+    // todo Suppress the abnormality
+    private void modifyValue(Widget.ClickData clickData, Upgrade upgrade, boolean isIncrease) {
+        if (isIncrease) {
+            if (upgrade.upgradeCost * memoryMultiplier < getMaxMemory() - calculateMemoryUsage()) {
+                upgrade.setCurrentValue(
+                        MathHelper.clamp(upgrade.currentValue + upgrade.incrementValue, upgrade.getMin(),
+                                upgrade.getMax()));
+            }
+        } else {
+            if (currentMemory >= upgrade.upgradeCost * memoryMultiplier) {
+                upgrade.setCurrentValue(
+                        MathHelper.clamp(upgrade.currentValue - upgrade.incrementValue, upgrade.getMin(),
+                                upgrade.getMax()));
+            }
         }
-    }
-
-    private void incrementScalar(Widget.ClickData clickData) {
-        if (getCurrentMemory() <= getMaxMemory() - getMemoryMultiplier() && getCurrentScalar() < maxScalar) {
-            scalar = MathHelper.clamp(scalar + 1, 0, maxScalar);
-            currentMemory = currentMemory + getMemoryMultiplier();
-        }
-    }
-
-    private void decrementProcessingSpeed(Widget.ClickData clickData) {
-        if (getCurrentMemory() >= 2 * getMemoryMultiplier() && (getCurrentSpeed()) > 100) {
-            processingSpeed = MathHelper.clamp(processingSpeed - 10, 100, 200);
-            currentMemory = currentMemory - 2 * getMemoryMultiplier();
-
-        }
-    }
-
-    private void incrementProcessingSpeed(Widget.ClickData clickData) {
-        if (getCurrentMemory() <= getMaxMemory() - 2 * getMemoryMultiplier() &&
-                getCurrentSpeed() < 200) {
-            processingSpeed = MathHelper.clamp(processingSpeed + 10, 100, 200);
-            currentMemory = currentMemory + 2 * getMemoryMultiplier();
-        }
-    }
-
-    private void decrementEuDiscount(Widget.ClickData clickData) {
-        if (getCurrentMemory() >= 3 * getMemoryMultiplier() && getCurrentDiscount() < 100) {
-            euDiscount = MathHelper.clamp(euDiscount + 5, 75, 100);
-            currentMemory = currentMemory - 3 * getMemoryMultiplier();
-        }
-    }
-
-    private void incrementEuDiscount(Widget.ClickData clickData) {
-        if (getCurrentMemory() <= getMaxMemory() - 3 * getMemoryMultiplier() &&
-                getCurrentDiscount() > 75) {
-            euDiscount = MathHelper.clamp(euDiscount - 5, 75, 100);
-            currentMemory = currentMemory + 3 * getMemoryMultiplier();
-        }
-    }
-
-    private void decrementParallelMultiplier(Widget.ClickData clickData) {
-        if (getCurrentMemory() >= 10 * getMemoryMultiplier() && parallelMultiplier > 1) {
-            parallelMultiplier = MathHelper.clamp(parallelMultiplier - 1, 1, 3);
-            currentMemory = currentMemory - 10 * getMemoryMultiplier();
-        }
-    }
-
-    private void incrementParallelMultiplier(Widget.ClickData clickData) {
-        if (getCurrentMemory() <= getMaxMemory() - 10 * getMemoryMultiplier() && getCurrentMultiplier() < 3) {
-            parallelMultiplier = MathHelper.clamp(parallelMultiplier + 1, 1, 3);
-            currentMemory = currentMemory + 10 * getMemoryMultiplier();
-        }
+        setMemoryUsage();
     }
 
     @Override
@@ -480,30 +450,29 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
     }
 
     @Override
-    public boolean isLaserHatchUpgrade() {
-        return this.isLaserCompatible();
-    }
-
-    @Override
     public int getTotalParallel() {
         long maxVoltage = Math.max(energyContainer.getInputVoltage(), energyContainer.getOutputVoltage());
-        return GTUtility.getTierByVoltage(maxVoltage) * this.getParallelScalar();
+        return GTUtility.getTierByVoltage(maxVoltage) * this.getParallelScalar() * parallelMultiplier.getCurrentValue();
     }
 
     public int getParallelScalar() {
-        return this.getCurrentScalar() + parallelScalar;
+        return scalar.currentValue + parallelScalar;
     }
 
     public void setParallelScalar(int amount) {
         parallelScalar = amount;
     }
 
+    public void setMemoryUsage() {
+        currentMemory = calculateMemoryUsage();
+    }
+
     @Override
     public double getTotalEUtDiscount() {
         if (inherentEUtDiscount == 0) {
-            return (double) this.getCurrentDiscount() * 0.01;
+            return (double) euDiscount.currentValue * 0.01;
         } else {
-            return (this.getCurrentDiscount() +
+            return (euDiscount.currentValue +
                     inherentEUtDiscount) * 0.01;
         }
     }
@@ -511,9 +480,9 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
     @Override
     public double getUpgradeSpeedBonus() {
         if (inherentSpeedBonus == 0) {
-            return (double) this.getCurrentSpeed() * 0.01;
+            return (double) (100 - processingSpeed.currentValue) * 0.01;
         } else {
-            return (this.getCurrentSpeed() +
+            return (100 - processingSpeed.currentValue +
                     inherentSpeedBonus) * 0.01;
         }
     }
@@ -536,13 +505,6 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
             predicate = predicate
                     .or(abilities(GCYMMultiblockAbility.UPGRADE_HATCH).setMaxGlobalLimited(1).setPreviewCount(1));
 
-        predicate = predicate
-                .or((isLaserHatchUpgrade() ? abilities(MultiblockAbility.INPUT_ENERGY, MultiblockAbility.INPUT_LASER) :
-                        abilities(MultiblockAbility.INPUT_ENERGY))
-                                .setMinGlobalLimited(1)
-                                .setMaxGlobalLimited(1)
-                                .setPreviewCount(1));
-
         return predicate;
     }
 
@@ -552,55 +514,61 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                 .setMaxGlobalLimited(1));
     }
 
-
-
     @Override
     public NBTTagCompound writeToNBT(@NotNull NBTTagCompound data) {
-        data.setInteger("scalar", this.scalar);
-        data.setInteger("processingSpeed", this.processingSpeed);
-        data.setInteger("euDiscount", this.euDiscount);
-        data.setInteger("parallelMultiplier", this.parallelMultiplier);
-        data.setBoolean("specialUpgrade", this.specialUpgrade);
-        data.setBoolean("laserCompatible", this.laserCompatible);
+        data.setInteger("scalar", scalar.getCurrentValue());
+        data.setInteger("processingSpeed", processingSpeed.getCurrentValue());
+        data.setInteger("euDiscount", euDiscount.getCurrentValue());
+        data.setInteger("parallelMultiplier", parallelMultiplier.getCurrentValue());
+        data.setInteger("specialUpgrade", specialUpgrade.getCurrentValue());
+        data.setInteger("laserCompatible", laserCompatible.getCurrentValue());
+
         data.setInteger("memoryMultiplier", this.memoryMultiplier);
+
+        data.setInteger("currentMemory", this.currentMemory);
         return super.writeToNBT(data);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
-        this.scalar = data.getInteger("scalar");
-        this.processingSpeed = data.getInteger("processingSpeed");
-        this.euDiscount = data.getInteger("euDiscount");
-        this.parallelMultiplier = data.getInteger("parallelMultiplier");
-        this.specialUpgrade = data.getBoolean("specialUpgrade");
-        this.laserCompatible = data.getBoolean("laserCompatible");
+        scalar.setCurrentValue(data.getInteger("scalar"));
+        processingSpeed.setCurrentValue(data.getInteger("processingSpeed"));
+        euDiscount.setCurrentValue(data.getInteger("euDiscount"));
+        parallelMultiplier.setCurrentValue(data.getInteger("parallelMultiplier"));
+        laserCompatible.setCurrentValue(data.getInteger("specialUpgrade"));
+        parallelMultiplier.setCurrentValue(data.getInteger("laserCompatible"));
+
         this.memoryMultiplier = data.getInteger("memoryMultiplier");
+        this.currentMemory = data.getInteger("currentMemory");
     }
 
     @Override
     public void writeInitialSyncData(PacketBuffer buf) {
         super.writeInitialSyncData(buf);
 
+        buf.writeInt(scalar.getCurrentValue());
+        buf.writeInt(processingSpeed.getCurrentValue());
+        buf.writeInt(euDiscount.getCurrentValue());
+        buf.writeInt(parallelMultiplier.getCurrentValue());
+        buf.writeInt(specialUpgrade.getCurrentValue());
+        buf.writeInt(laserCompatible.getCurrentValue());
 
-        buf.writeInt(this.scalar);
-        buf.writeInt(this.processingSpeed);
-        buf.writeInt(this.euDiscount);
-        buf.writeInt(this.parallelMultiplier);
-        buf.writeBoolean(this.specialUpgrade);
-        buf.writeBoolean(this.laserCompatible);
         buf.writeInt(this.memoryMultiplier);
+        buf.writeInt(this.currentMemory);
     }
 
     @Override
     public void receiveInitialSyncData(PacketBuffer buf) {
         super.receiveInitialSyncData(buf);
-        this.scalar = buf.readInt();
-        this.processingSpeed = buf.readInt();
-        this.euDiscount = buf.readInt();
-        this.parallelMultiplier = buf.readInt();
-        this.specialUpgrade = buf.readBoolean();
-        this.laserCompatible = buf.readBoolean();
+        scalar.setCurrentValue(buf.readInt());
+        processingSpeed.setCurrentValue(buf.readInt());
+        euDiscount.setCurrentValue(buf.readInt());
+        parallelMultiplier.setCurrentValue(buf.readInt());
+        specialUpgrade.setCurrentValue(buf.readInt());
+        laserCompatible.setCurrentValue(buf.readInt());
+
         this.memoryMultiplier = buf.readInt();
+        this.currentMemory = buf.readInt();
     }
 }

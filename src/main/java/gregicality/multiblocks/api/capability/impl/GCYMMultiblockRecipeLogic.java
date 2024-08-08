@@ -64,7 +64,7 @@ public class GCYMMultiblockRecipeLogic extends MultiblockRecipeLogic {
 
         processingSpeedModifier = ((IUpgradeableMultiblock) metaTileEntity).getUpgradeSpeedBonus();
 
-        overclockResults[1] = (int) (overclockResults[1] / processingSpeedModifier);
+        overclockResults[1] = (int) (overclockResults[1] * processingSpeedModifier);
     }
 
     @Override
