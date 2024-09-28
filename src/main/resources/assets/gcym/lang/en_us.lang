@@ -1,38 +1,46 @@
 
-
 # multiblocks
-gcym.machine.large_macerator.name=Large Maceration Tower
+
 gcym.machine.alloy_blast_smelter.name=Alloy Blast Smelter
+gcym.machine.electric_implosion_compressor.name=Electric Implosion Compressor
 gcym.machine.large_arc_furnace.name=Large Arc Smelter
 gcym.machine.large_assembler.name=Large Assembling Factory
 gcym.machine.large_autoclave.name=Large Autoclave Chamber
 gcym.machine.large_bender.name=Large Material Press
 gcym.machine.large_brewer.name=Large Brewing Vat
+gcym.machine.large_canner.name=Large Canning Machine
 gcym.machine.large_centrifuge.name=Large Centrifuge Unit
 gcym.machine.large_chemical_bath.name=Large Chemical Bath
-gcym.machine.chemical_plant.name=Chemical Plant
-gcym.machine.chemical_plant.tooltip.1=Only runs Large Chemical Recipes in parallel
-gcym.machine.large_extractor.name=Large Extracting Machine
+gcym.machine.large_circuit_assembler.name=Large Circuit Assembler
+gcym.machine.large_compressor.name=Large Compressor
 gcym.machine.large_cutter.name=Large Cutting Machine
 gcym.machine.large_distillery.name=Large Fractionating Distillery
 gcym.machine.large_electrolyzer.name=Large Electrolysis Plant
-gcym.machine.large_polarizer.name=Large Electromagnet
-gcym.machine.large_extruder.name=Large Extrusion Machine
-gcym.machine.large_solidifier.name=Large Solidification Array
-gcym.machine.large_mixer.name=Large Mixing Vessel
-gcym.machine.large_packager.name=Large Packaging Machine
+gcym.machine.large_electromagnetic_separator.name=Large Electromagnetic Separator
 gcym.machine.large_engraver.name=Large Engraving Machine
+gcym.machine.large_extractor.name=Large Extracting Machine
+gcym.machine.large_extruder.name=Large Extrusion Machine
+gcym.machine.large_fermenter.name=Large Fermenter
+gcym.machine.large_fluid_heater.name=Large Fluid Heater
+gcym.machine.large_forge_hammer.name=Large Forge Hammer
+gcym.machine.large_forming_press.name=Large Forming Press
+gcym.machine.large_macerator.name=Large Maceration Tower
+gcym.machine.large_mixer.name=Large Mixing Vessel
+gcym.machine.large_ore_washer.name=Large Ore Washer
+gcym.machine.large_packager.name=Large Packaging Machine
+gcym.machine.large_polarizer.name=Large Electromagnet
 gcym.machine.large_sifter.name=Large Sifting Funnel
+gcym.machine.large_solidifier.name=Large Solidification Array
+gcym.machine.large_thermal_centrifuge.name=Large Thermal Centrifuge
 gcym.machine.large_wiremill.name=Large Wire Factory
-gcym.machine.electric_implosion_compressor.name=Electric Implosion Compressor
-gcym.machine.large_mass_fabricator.name=Large Mass Fabrication Chamber
-gcym.machine.large_replicator.name=Large Replication Chamber
-gcym.machine.mega_blast_furnace.name=Rotary Hearth Furnace
-gcym.machine.mega_vacuum_freezer.name=Bulk Blast Chiller
-gcym.machine.steam_engine.name=Industrial Steam Engine
-gcym.machine.steam_engine.tooltip.1=Produces up to %s§7 power.
-gcym.machine.large_circuit_assembler.name=Large Circuit Assembler
 
+gcym.machine.mega_assembly_line.name=Industrial Manufacturing Line
+gcym.machine.mega_blast_furnace.name=Rotary Hearth Furnace
+gcym.machine.mega_chemical_reactor.name=Streamlined Chemical Plant
+gcym.machine.mega_fusion_reactor.name=Inertial Confinement Reactor
+gcym.machine.mega_oil_cracker.name=Catalytic Cracking Refinery
+gcym.machine.mega_pyrolyse_oven.name=Incendiary Pyrolysis Factory
+gcym.machine.mega_vacuum_freezer.name=Bulk Blast Chiller
 
 gcym.tooltip.parallel_enabled=Can parallelize with §bParallel Control Hatches
 gcym.tooltip.tiered_hatch_enabled=Requires §bVoltage Control Units§7 to run.
@@ -42,10 +50,32 @@ gcym.multiblock.tiered_hatch.tooltip=Max Tiered EU/t: §a%s (%s§r)
 
 gcym.multiblock.energy_discount=EU Usage: %s
 gcym.multiblock.energy_discount_hover=Energy usage modifier, determined by Multiblock type
+
+
 gcym.multiblock.parallel=Max Parallels: %s
 gcym.multiblock.parallel_hover=Maximum Parallels, determined by Max EU/t
 gcym.multiblock.speed=Processing Speed: %s
 gcym.multiblock.speed_hover=Processing speed modifier, determined by Multiblock type
+
+gcym.multiblock.decrement_scalar_parallel=Decrease parallels/tier by §c1§r/n§7Value is calculated before any multipliers!
+gcym.multiblock.scalar_parallel=Add an extra parallel per voltage tier/n§7Cost: 1GB || Maximum: +5
+gcym.multiblock.increment_scalar_parallel=Increase parallels/tier by §a1§r/n§7Value is calculated before any multipliers!
+
+gcym.multiblock.decrement_processing_speed=Decrease Speed Bonus by §c5%%§r/n§7As this is a speed bonus, decreasing this will increase recipe time!
+gcym.multiblock.processing_speed=Apply a Speed Bonus to recipes/n§7Cost: 2GB || Maximum: -50%% Recipe Duration
+gcym.multiblock.increment_processing_speed=Increase Speed Bonus by §a5%%§r/n§7As this is a speed bonus, increasing this will decrease recipe time!
+
+gcym.multiblock.decrement_eu_discount=Decrease EU/t Discount by §c5%%§r/n§7Adjusting this may allow additional overclocks!
+gcym.multiblock.eu_discount=Apply an Energy Discount to recipes/n§7Cost: 3GB || Maximum: -50%% EU/t Usage
+gcym.multiblock.increment_eu_discount=Increase EU/t Discount by §a5%%§r/n§7Adjusting this may allow additional overclocks!
+
+gcym.multiblock.decrement_multiplier_parallel=Decrease Parallel Multiplier by §c5%%§r/n§7Value is applied after all other modifiers!
+gcym.multiblock.multiplier_parallel=Apply a Multiplier to overall Parallel/n§7Cost: 10GB || Maximum: 5x Multiplier
+gcym.multiblock.increment_multiplier_parallel=Increase EU/t Discount by §a5%%§r/n§7Value is applied after all other modifiers!
+
+gcym.multiblock.special_upgrade=Apply a Special Upgrade to your Multiblock/n§7These upgrades are unique to each Multiblock and can be viewed in the Controller Tooltip/nCost: 20GB and applies a 2x Multiplier to Memory Usage
+gcym.multiblock.laser_upgrade=Enable Laser Hatch compatibility for your Multiblock/n§7Overwhelming power, at what cost?/nCost: 30GB and applies a 3x Multiplier to Memory Usage
+gcym.multiblock.reset=Reset all upgrade points and reform the Multiblock
 
 
 
@@ -53,47 +83,11 @@ gcym.tooltip.max_parallel=§5Max Parallel: §f%s §7per voltage tier
 gcym.tooltip.energy_discount=§aEnergy Usage: §f%s%%
 gcym.tooltip.speed_boost=§bProcessing Speed: §f%s%%
 
-
-
-# multiblock descriptions
-gcym.multiblock.large_macerator.description=A multiblock Macerator for grinding.
-gcym.multiblock.alloy_blast_smelter.description=A Blast Furnace built for creating alloys in high volumes.
-gcym.multiblock.large_arc_furnace.description=A multiblock Arc Furnace for recycling.
-gcym.multiblock.large_assembler.tooltip=A multiblock Assembling Machine for putting things together.
-gcym.multiblock.large_autoclave.description=A multiblock Autoclave for pressurizing things.
-gcym.multiblock.large_bender.description=A multiblock Bending Machine, Compressor, Forming Press and Forge Hammer for forming materials.
-gcym.multiblock.large_brewer.description=A multiblock Brewing Machine and Fermenter for producing brews.
-gcym.multiblock.large_centrifuge.description=A multiblock Centrifuge and Thermal Centrifuge for separating materials.
-gcym.multiblock.large_chemical_bath.description=A multiblock Chemical Bath and Ore Washing Plant for cleaning materials.
-gcym.multiblock.chemical_plant.description=A Chemical Plant for advanced chemistry.
-gcym.multiblock.large_extractor.description=A multiblock Extractor and Canning Machine for transferring materials.
-gcym.multiblock.large_cutter.description=A multiblock Cutting Machine and Lathe for cutting things into smaller pieces.
-gcym.multiblock.large_distillery.description=A multiblock Distillery and Distillation Tower for separating fluids into fractions.
-gcym.multiblock.large_electrolyzer.description=A multiblock Electrolyzer for separating molecules.
-gcym.multiblock.large_polarizer.description=A multiblock Polarizer and Electromagnetic Separator for magnetizing materials.
-gcym.multiblock.large_extruder.description=A multiblock Extruder for shaping materials.
-gcym.multiblock.large_solidifier.description=A multiblock Fluid Solidifier for casting materials.
-gcym.multiblock.large_mixer.description=A multiblock Mixer for blending materials.
-gcym.multiblock.large_packager.description=A multiblock Packager for boxinating items.
-gcym.multiblock.large_engraver.description=A multiblock Laser Engraver for etching objects.
-gcym.multiblock.large_sifter.description=A multiblock Sifting Machine for filtering materials.
-gcym.multiblock.large_wiremill.description=A multiblock Wiremill for producing wires.
-gcym.multiblock.electric_implosion_compressor.description=An electric version of the implosion compressor for extreme compression.
-gcym.multiblock.large_mass_fabricator.description=A multiblock Mass Fabricator for turning matter into elementary particles.
-gcym.multiblock.large_replicator.description=A multiblock Replicator for turning elementary particles into materials.
-gcym.multiblock.mega_blast_furnace.description=A massive Electric Blast Furnace for extreme volume smelting.
-gcym.multiblock.mega_vacuum_freezer.description=A massive Vacuum Freezer for extreme volume cooling.
-gcym.multiblock.steam_engine.description=A large Steam Engine for effective power production.
-gcym.multiblock.large_circuit_assembler.description=A multiblock Circuit Assembler for fabricating circuits.
-
-
 # hatches
 gcym.machine.upgrade_hatch.iv.name=Elite Upgrade Hatch
 gcym.machine.upgrade_hatch.luv.name=Master Upgrade Hatch
 gcym.machine.upgrade_hatch.zpm.name=Ultimate Upgrade Hatch
 gcym.machine.upgrade_hatch.uv.name=Super Upgrade Hatch
-gcym.machine.upgrade_hatch_singular.tooltip=Holds up to §b%s§7 Upgrade Chip.
-gcym.machine.upgrade_hatch.tooltip=Holds up to §b%s§7 Upgrade Chips.
 
 gcym.machine.tiered_hatch.tooltip.1=Enables up to %s§7 Voltage.
 
@@ -165,5 +159,3 @@ gcym.fluid.molten=Molten %s
 # deprecation
 gcym.deprecation.tooltip=§cThis Machine is DEPRECATED! It will be REMOVED in the next update! Break the controller block to recover crafting materials!
 
-# items
-metaitem.upgradechip.foobar.name=Generic Upgrade Chip

@@ -12,7 +12,6 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
@@ -30,7 +29,7 @@ public class MetaTileEntityLargeChemicalBath extends GCYMRecipeMapMultiblockCont
                                                                                          // hatches
 
     public MetaTileEntityLargeChemicalBath(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, new RecipeMap[] { RecipeMaps.CHEMICAL_BATH_RECIPES, RecipeMaps.ORE_WASHER_RECIPES });
+        super(metaTileEntityId, RecipeMaps.CHEMICAL_BATH_RECIPES);
     }
 
     @Override

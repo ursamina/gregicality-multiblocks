@@ -2,19 +2,11 @@ package gregicality.multiblocks.common.metatileentities.multiblock.standard;
 
 import static gregtech.api.util.RelativeDirection.*;
 
-import java.util.List;
-
-import gregicality.multiblocks.api.capability.IUpgradeableMultiblock;
-import gregtech.api.recipes.recipeproperties.IRecipePropertyStorage;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -39,7 +31,6 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
     public MetaTileEntityLargeAssembler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, determineRecipeMaps());
         this.setParallelScalar(2);
-        this.recipeMapWorkable.setSpeedBonus(this.getSpecialUpgrade() ? 0.01 :  this.getUpgradeSpeedBonus());
     }
 
     @Override
@@ -58,8 +49,8 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
                 .aisle("XXX", "XAX", "#XX")
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(40)
-                        .or(autoAbilities(false, true, true, true, true, true, true)).or(getHatchPredicates()))
+                .where('X', states(getCasingState()).setMinGlobalLimited(super.getSpecialUpgrade() ? 30 : 1)
+                        .or(autoAbilities(false, true, true, true, true, true, true)).or(getHatchPredicates(true)))
                 .where('C', states(getCasingState2()))
                 .where('T', tieredCasing().or(air()))
                 .where('A', air())
@@ -90,11 +81,11 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
         return true;
     }
 
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(I18n.format("gcym.tooltip.max_energy_hatches", 1));
-    }
+    // @Override
+    // public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
+    // tooltip.add(I18n.format("gcym.tooltip.max_energy_hatches", 1));
+    // super.addInformation(stack, player, tooltip, advanced);
+    // }
 
     private static @NotNull RecipeMap<?> @NotNull [] determineRecipeMaps() {
         RecipeMap<?> cuisineAssemblerMap = RecipeMap.getByName("cuisine_assembler");
@@ -102,5 +93,12 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
             return new RecipeMap<?>[] { RecipeMaps.ASSEMBLER_RECIPES, cuisineAssemblerMap };
         }
         return new RecipeMap<?>[] { RecipeMaps.ASSEMBLER_RECIPES };
+    }
+
+    @Override
+    public double getUpgradeSpeedBonus() {
+        if (this.getSpecialUpgrade()) {
+            return super.getUpgradeSpeedBonus() * 0.8;
+        } else return super.getUpgradeSpeedBonus();
     }
 }

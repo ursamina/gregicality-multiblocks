@@ -10,7 +10,6 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
@@ -26,8 +25,7 @@ import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
 public class MetaTileEntityLargeBender extends GCYMRecipeMapMultiblockController {
 
     public MetaTileEntityLargeBender(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, new RecipeMap[] { RecipeMaps.BENDER_RECIPES, RecipeMaps.COMPRESSOR_RECIPES,
-                RecipeMaps.FORMING_PRESS_RECIPES, RecipeMaps.FORGE_HAMMER_RECIPES });
+        super(metaTileEntityId, RecipeMaps.BENDER_RECIPES);
         this.setParallelScalar(4);
         this.recipeMapWorkable.setSpeedBonus(0.2);
     }
@@ -44,7 +42,8 @@ public class MetaTileEntityLargeBender extends GCYMRecipeMapMultiblockController
                 .aisle("XXXXXXX", "XTXGGGX", "XXXXXXX")
                 .aisle("XXXXXXX", "XSXCCCX", "XXXXXXX")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
+                .where('X', states(getCasingState()).setMinGlobalLimited(40)
+                        .or(autoAbilities(false, true, true, true, true, true, true)).or(getHatchPredicates(false)))
                 .where('G', states(getCasingState2()))
                 .where('C', states(getCasingState3()))
                 .where('T', tieredCasing().or(air()))

@@ -8,14 +8,12 @@ import org.jetbrains.annotations.NotNull;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.cube.OrientedOverlayRenderer;
-import gregtech.common.blocks.BlockFusionCasing;
-import gregtech.common.blocks.BlockGlassCasing;
-import gregtech.common.blocks.MetaBlocks;
 
 import gregicality.multiblocks.api.metatileentity.GCYMRecipeMapMultiblockController;
 import gregicality.multiblocks.api.render.GCYMTextures;
@@ -23,57 +21,57 @@ import gregicality.multiblocks.common.block.GCYMMetaBlocks;
 import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
 import gregicality.multiblocks.common.block.blocks.BlockUniqueCasing;
 
-public class MetaTileEntityLargeReplicator extends GCYMRecipeMapMultiblockController {
+public class MetaTileEntityMegaPyrolyseOven extends GCYMRecipeMapMultiblockController {
 
-    public MetaTileEntityLargeReplicator(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.REPLICATOR_RECIPES);
+    public MetaTileEntityMegaPyrolyseOven(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, RecipeMaps.PYROLYSE_RECIPES);
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
-        return new MetaTileEntityLargeReplicator(this.metaTileEntityId);
+        return new MetaTileEntityMegaPyrolyseOven(this.metaTileEntityId);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXXXX", "XVVVX", "XGGGX", "XGGGX", "XVVVX", "XXXXX")
-                .aisle("XXXXX", "VCCCV", "GAAAG", "GAAAG", "VCCCV", "XXXXX")
-                .aisle("XXXXX", "VCCCV", "GACAG", "GACAG", "VCCCV", "XXXXX")
-                .aisle("XXXXX", "VCCCV", "GAAAG", "GAAAG", "VCCCV", "XXXXX")
-                .aisle("XXSXX", "XVVVX", "XGGGX", "XGGGX", "XVVVX", "XXXXX")
+                .aisle("#XXX#", "#XXX#", "#XXX#", "#XXX#")
+                .aisle("XXXXX", "XCACX", "XCACX", "XXXXX")
+                .aisle("XXXXX", "XATAX", "XAAAX", "XXMXX")
+                .aisle("XXXXX", "XACAX", "XACAX", "XXXXX")
+                .aisle("#XXX#", "#XSX#", "#XXX#", "#XXX#")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(50).or(autoAbilities()))
+                .where('X', states(getCasingState()).setMinGlobalLimited(45)
+                        .or(autoAbilities(true, true, true, true, true, true, false)))
                 .where('C', states(getCasingState2()))
-                .where('G', states(getCasingState3()))
-                .where('V', states(getCasingState4()))
+                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
+                .where('T', tieredCasing().or(air()))
                 .where('A', air())
+                .where('#', any())
                 .build();
     }
 
     private static IBlockState getCasingState() {
-        return GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.ATOMIC_CASING);
+        return GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING
+                .getState(BlockLargeMultiblockCasing.CasingType.HIGH_TEMPERATURE_CASING);
     }
 
     private static IBlockState getCasingState2() {
-        return MetaBlocks.FUSION_CASING.getState(BlockFusionCasing.CasingType.FUSION_COIL);
-    }
-
-    private static IBlockState getCasingState3() {
-        return MetaBlocks.TRANSPARENT_CASING.getState(BlockGlassCasing.CasingType.FUSION_GLASS);
-    }
-
-    private static IBlockState getCasingState4() {
-        return GCYMMetaBlocks.UNIQUE_CASING.getState(BlockUniqueCasing.UniqueCasingType.HEAT_VENT);
+        return GCYMMetaBlocks.UNIQUE_CASING.getState(BlockUniqueCasing.UniqueCasingType.MOLYBDENUM_DISILICIDE_COIL);
     }
 
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return GCYMTextures.ATOMIC_CASING;
+        return GCYMTextures.BLAST_CASING;
     }
 
     @Override
     protected @NotNull OrientedOverlayRenderer getFrontOverlay() {
-        return GCYMTextures.LARGE_MASS_FABRICATOR_OVERLAY;
+        return GCYMTextures.LARGE_ARC_FURNACE_OVERLAY;
+    }
+
+    @Override
+    public boolean hasMufflerMechanics() {
+        return true;
     }
 }

@@ -44,7 +44,10 @@ public class BlockLargeMultiblockCasing extends VariantBlock<BlockLargeMultibloc
         MIXER_CASING("mixer_casing"),
         ENGRAVER_CASING("engraver_casing"),
         ATOMIC_CASING("atomic_casing"),
-        STEAM_CASING("steam_casing");
+        STEAM_CASING("steam_casing"),
+        SAMPLE_CASING("sample_casing"),
+        SAMPLE_CASING_2("sample_casing_2"),
+        SAMPLE_CASING_3("sample_casing_3");
 
         private final String name;
 
