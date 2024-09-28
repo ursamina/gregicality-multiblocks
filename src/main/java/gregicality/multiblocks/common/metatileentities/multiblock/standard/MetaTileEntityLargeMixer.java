@@ -28,8 +28,6 @@ public class MetaTileEntityLargeMixer extends GCYMRecipeMapMultiblockController 
 
     public MetaTileEntityLargeMixer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.MIXER_RECIPES);
-        this.setParallelScalar(8);
-        this.recipeMapWorkable.setSpeedBonus(0.4);
     }
 
     @Override

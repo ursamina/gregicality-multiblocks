@@ -1,21 +1,8 @@
 package gregicality.multiblocks.api.metatileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import gregicality.multiblocks.api.capability.IUpgradeableMultiblock;
+import gregicality.multiblocks.api.capability.impl.GCYMMultiblockRecipeLogic;
+import gregicality.multiblocks.common.GCYMConfigHolder;
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IControllable;
 import gregtech.api.capability.IEnergyContainer;
@@ -34,12 +21,19 @@ import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.TextComponentUtil;
-import gregtech.api.util.TextFormattingUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import gregicality.multiblocks.api.capability.IUpgradeableMultiblock;
-import gregicality.multiblocks.api.capability.impl.GCYMMultiblockRecipeLogic;
-import gregicality.multiblocks.common.GCYMConfigHolder;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblockController
                                                         implements IUpgradeableMultiblock {
@@ -89,56 +83,7 @@ public abstract class GCYMRecipeMapMultiblockController extends MultiMapMultiblo
                 .addEnergyUsageLine(getEnergyContainer())
                 .addEnergyTierLine(GTUtility.getTierByVoltage(recipeMapWorkable.getMaxVoltage()))
                 .addCustom(tl -> {
-                    if (isStructureFormed()) {
-                        // Energy Discount
-                        if (getTotalEUtDiscount() != 0) {
 
-                            ITextComponent energyDiscount = TextComponentUtil.stringWithColor(
-                                    TextFormatting.AQUA,
-                                    TextFormattingUtil.formatNumbers(getTotalEUtDiscount() * 100));
-
-                            ITextComponent base = TextComponentUtil.translationWithColor(
-                                    TextFormatting.GRAY,
-                                    "EU/t Discount: %s%%",
-                                    energyDiscount);
-
-                            ITextComponent hoverText = TextComponentUtil.translationWithColor(
-                                    TextFormatting.GRAY,
-                                    "gcym.multiblock.energy_discount_hover");
-
-                            TextComponentUtil.setHover(base, hoverText);
-
-                            tl.add(base);
-                        }
-                        // Processing Speed
-                        if (getUpgradeSpeedBonus() != 1) {
-                            ITextComponent speedBoost = TextComponentUtil.stringWithColor(
-                                    TextFormatting.AQUA,
-                                    TextFormattingUtil.formatNumbers(100.0 * getUpgradeSpeedBonus()) + "%");
-                            ITextComponent base = TextComponentUtil.translationWithColor(
-                                    TextFormatting.GRAY,
-                                    "Recipe Duration: %s",
-                                    speedBoost);
-                            ITextComponent hoverText = TextComponentUtil.translationWithColor(
-                                    TextFormatting.GRAY,
-                                    "gcym.multiblock.speed_hover");
-                            TextComponentUtil.setHover(base, hoverText);
-                            tl.add(base);
-                        }
-                        ITextComponent parallels = TextComponentUtil.stringWithColor(
-                                TextFormatting.DARK_PURPLE,
-                                TextFormattingUtil.formatNumbers(
-                                        getTotalParallel()));
-                        ITextComponent bodyText = TextComponentUtil.translationWithColor(
-                                TextFormatting.GRAY,
-                                "gcym.multiblock.parallel",
-                                parallels);
-                        ITextComponent hoverText = TextComponentUtil.translationWithColor(
-                                TextFormatting.GRAY,
-                                "gcym.multiblock.parallel_hover");
-                        tl.add(TextComponentUtil.setHover(bodyText, hoverText));
-
-                    }
                 })
                 .addWorkingStatusLine()
                 .addProgressLine(recipeMapWorkable.getProgressPercent());

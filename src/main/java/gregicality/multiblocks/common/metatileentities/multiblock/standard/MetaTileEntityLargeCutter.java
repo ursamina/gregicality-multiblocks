@@ -31,7 +31,6 @@ public class MetaTileEntityLargeCutter extends GCYMRecipeMapMultiblockController
 
     public MetaTileEntityLargeCutter(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, determineRecipeMaps());
-        this.setParallelScalar(4);
         this.recipeMapWorkable.setSpeedBonus(0.5);
         this.recipeMapWorkable.setEUDiscount(0.75);
     }

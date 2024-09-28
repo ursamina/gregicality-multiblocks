@@ -18,19 +18,4 @@ public interface IUpgradeableMultiblock {
         return 1;
     }
 
-    default double getTotalEUtDiscount() {
-        return 0.5;
-    }
-
-    default double getUpgradeSpeedBonus() {
-        return -1;
-    }
-
-    default boolean isLaserHatchUpgrade() {
-        return false;
-    }
-
-    default boolean hasMemoryCapacity() {
-        return true;
-    };
 }

@@ -24,8 +24,6 @@ public class MetaTileEntityLargePackager extends GCYMRecipeMapMultiblockControll
 
     public MetaTileEntityLargePackager(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.PACKER_RECIPES);
-        this.setParallelScalar(5);
-        this.recipeMapWorkable.setEUDiscount(0.75);
     }
 
     @Override
