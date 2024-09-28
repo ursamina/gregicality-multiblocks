@@ -30,7 +30,6 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
 
     public MetaTileEntityLargeAssembler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, determineRecipeMaps());
-        this.setParallelScalar(2);
     }
 
     @Override
@@ -49,7 +48,7 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
                 .aisle("XXX", "XAX", "#XX")
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(super.getSpecialUpgrade() ? 30 : 1)
+                .where('X', states(getCasingState()).setMinGlobalLimited(30)
                         .or(autoAbilities(false, true, true, true, true, true, true)).or(getHatchPredicates(true)))
                 .where('C', states(getCasingState2()))
                 .where('T', tieredCasing().or(air()))
@@ -93,12 +92,5 @@ public class MetaTileEntityLargeAssembler extends GCYMRecipeMapMultiblockControl
             return new RecipeMap<?>[] { RecipeMaps.ASSEMBLER_RECIPES, cuisineAssemblerMap };
         }
         return new RecipeMap<?>[] { RecipeMaps.ASSEMBLER_RECIPES };
-    }
-
-    @Override
-    public double getUpgradeSpeedBonus() {
-        if (this.getSpecialUpgrade()) {
-            return super.getUpgradeSpeedBonus() * 0.8;
-        } else return super.getUpgradeSpeedBonus();
     }
 }

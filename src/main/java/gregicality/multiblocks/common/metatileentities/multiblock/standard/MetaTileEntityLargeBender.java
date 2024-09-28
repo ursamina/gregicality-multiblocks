@@ -26,7 +26,6 @@ public class MetaTileEntityLargeBender extends GCYMRecipeMapMultiblockController
 
     public MetaTileEntityLargeBender(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.BENDER_RECIPES);
-        this.setParallelScalar(4);
         this.recipeMapWorkable.setSpeedBonus(0.2);
     }
 

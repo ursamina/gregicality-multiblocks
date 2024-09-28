@@ -27,7 +27,6 @@ public class MetaTileEntityLargeCentrifuge extends GCYMRecipeMapMultiblockContro
 
     public MetaTileEntityLargeCentrifuge(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES);
-        this.setParallelScalar(3);
     }
 
     @Override
