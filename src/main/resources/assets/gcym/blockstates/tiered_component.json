@@ -1,0 +1,43 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all",
+    "textures": {
+      "all": "gregtech:blocks/rendering_error"
+    }
+  },
+  "variants": {
+    "variant": {
+      "insane_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/voltage/iv/side"
+        }
+      },
+      "ludicrous_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/voltage/luv/side"
+        }
+      },
+      "zero_point_module": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/voltage/zpm/side"
+        }
+      },
+      "ultimate_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/voltage/uv/side"
+        }
+      },
+      "ultra_high_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/voltage/uhv/side"
+        }
+      }
+    }
+  }
+}

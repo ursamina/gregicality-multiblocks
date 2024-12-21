@@ -41,6 +41,8 @@ public class CommonProxy {
 
         registry.register(GCYMMetaBlocks.UNIQUE_CASING);
         registry.register(GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING);
+        registry.register(GCYMMetaBlocks.SUPERCONDUCTOR_COIL);
+        registry.register(GCYMMetaBlocks.TIERED_COMPONENT);
     }
 
     @SubscribeEvent
@@ -50,6 +52,8 @@ public class CommonProxy {
 
         registry.register(createItemBlock(GCYMMetaBlocks.UNIQUE_CASING, VariantItemBlock::new));
         registry.register(createItemBlock(GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING, VariantItemBlock::new));
+        registry.register(createItemBlock(GCYMMetaBlocks.SUPERCONDUCTOR_COIL, VariantItemBlock::new));
+        registry.register(createItemBlock(GCYMMetaBlocks.TIERED_COMPONENT, VariantItemBlock::new));
     }
 
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {

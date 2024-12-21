@@ -1,0 +1,67 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all",
+    "textures": {
+      "all": "gregtech:blocks/rendering_error"
+    }
+  },
+  "variants": {
+    "variant": {
+      "low_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/low_voltage"
+        }
+      },
+      "medium_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/medium_voltage"
+        }
+      },
+      "high_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/high_voltage"
+        }
+      },
+      "extreme_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/extreme_voltage"
+        }
+      },
+      "insane_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/insane_voltage"
+        }
+      },
+      "ludicrous_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/ludicrous_voltage"
+        }
+      },
+      "zero_point_module": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/zero_point_module"
+        }
+      },
+      "ultimate_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/ultimate_voltage"
+        }
+      },
+      "ultra_high_voltage": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/superconductor_coils/ultra_high_voltage"
+        }
+      }
+    }
+  }
+}
